@@ -2,6 +2,8 @@ import discord
 import discord
 from discord.ext import commands, tasks
 from itertools import cycle
+import pprint
+
 
 import bs4 as bs
 import urllib.request
@@ -39,7 +41,6 @@ def get_status_bool(soup):
 def get_detailed_status(soup):
     status_detailed  = {}
     statuses = soup.find_all('div', class_='component-inner-container')
-
     for item in statuses:
         name = item.find('span', class_='name').text.strip()
         status = item.find('span', class_='component-status').text.strip()
@@ -49,6 +50,22 @@ def get_detailed_status(soup):
 def get_last_incident(soup):
     #Coming soon
     return('Coming soon...')
+
+def print_dict(dct):
+    result = ''
+    for resource, status in dct.items():
+        result += ("\n{} - {}".format(resource, status))
+    result = f'```{result}```'
+    return(result)
+
+
+#API lists
+mixer_apis = ['Mixer API', 'Interactive API', 'Webhook Delivery']
+mixer_web = ['Mixer Web Experience', 'Website Delivery', 'Chat', 'Skills (Sparks and Embers)', 'Dashboard', 'Interactive API', 'Webhook Delivery']
+mixer_xbox = ['Mixer Xbox App', 'Skills (Sparks and Embers)', 'Chat', 'Xbox/Windows Notification Delivery']
+mixer_video = ['FTL (Low Latency) Video Delivery', 'HLS (Fallback) Video Delivery', 'Video Ingestion', 'Video Distribution']
+mixer_vod = ['VOD', 'VOD Uploads', 'VOD Playback']
+
 
 #Startup
 with open(f'{os.path.dirname(os.path.realpath(__file__))}/settings.json') as f:
@@ -92,18 +109,41 @@ async def update_bot_status():
 
 #Root Commands
 @client.command()
-'''Returns current Mixer status'''
 async def status(ctx, *, param='none'):
+    '''Returns current Mixer status'''
+    param.capitalize()
     status = get_status(get_soup_from_cache())
+    status_ext = get_detailed_status(get_soup_from_cache())
     await ctx.send(status)
 
-    if param == '':
+    result = ''
+    if param == 'vod':
+        for x in mixer_vod:
+            result += ("\n{} - {}".format(x, status_ext[x]))
+        result = f'```{result}```'
+        await ctx.send(result)
+    if param == 'video':
+        for x in mixer_video:
+            result += ("\n{} - {}".format(x, status_ext[x]))
+        result = f'```{result}```'
+        await ctx.send(result)
+    if param == 'xbox':
+        for x in mixer_xbox:
+            result += ("\n{} - {}".format(x, status_ext[x]))
+        result = f'```{result}```'
+        await ctx.send(result)
+    if param == 'web':
+        for x in mixer_web:
+            result += ("\n{} - {}".format(x, status_ext[x]))
+        result = f'```{result}```'
+        await ctx.send(result)
+    if param == 'api':
+        for x in mixer_apis:
+            result += ("\n{} - {}".format(x, status_ext[x]))
+        result = f'```{result}```'
+        await ctx.send(result)
+    if param == 'none': await ctx.send(print_dict(status_ext))
 
-    elif:
-
-    else:
-        
-    
 
 #Cog managment
 @client.command(hidden=True)
@@ -136,12 +176,12 @@ async def reload(ctx, extension='null'):
 async def listcogs(ctx):
     cogs = []
     for filename in os.listdir(f'{os.path.dirname(os.path.realpath(__file__))}/cogs'):
-        if filename.endswith('.py') and filename == 'functions.py':
+        if filename.endswith('.py'):
             cogs.append(f'{filename[:-3]}')
     await ctx.send(f'Found these cogs:\n{cogs}')
 
 for filename in os.listdir(f'{os.path.dirname(os.path.realpath(__file__))}/cogs'):
-    if filename.endswith('.py') and filename != 'functions.py':
+    if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
 
 
