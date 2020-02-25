@@ -74,6 +74,7 @@ mode = settings["mode"]
 prefix = settings["prefix"]
 default_game = settings["default_game"]
 client = commands.Bot(command_prefix = prefix)
+client.remove_command('help')
 
 
 #Startup
@@ -108,9 +109,13 @@ async def update_bot_status():
 
 #Root Commands
 @client.command()
+async def help(ctx):
+    help_cmd = f'```Use {prefix}status to check the current status of Mixer.com.\n\nParameters available: all, web, video, vod, xbox, api.```'
+    await ctx.send(help_cmd)
+
+@client.command()
 async def status(ctx, *, param='none'):
     '''Returns current Mixer status'''
-    param.capitalize()
     status = get_status(get_soup_from_cache())
     status_ext = get_detailed_status(get_soup_from_cache())
     await ctx.send(status)
@@ -140,7 +145,10 @@ async def status(ctx, *, param='none'):
             result += ("\n{} - {}".format(x, status_ext[x]))
         result = f'```{result}```'
         await ctx.send(result)
-    if param == 'none': await ctx.send(print_dict(status_ext))
+    if param == 'all': 
+        await ctx.send(print_dict(status_ext))
+    if param == 'none': 
+        await ctx.send(status)
 
 
 #Cog managment
