@@ -1,12 +1,12 @@
 import discord
-import os
-import json
 import discord
 from discord.ext import commands, tasks
 from itertools import cycle
 
 import bs4 as bs
 import urllib.request
+import json
+import os
 
 
 def update_soup_cache():
@@ -92,9 +92,17 @@ async def update_bot_status():
 
 #Root Commands
 @client.command()
-async def status(ctx):
+'''Returns current Mixer status'''
+async def status(ctx, *, param='none'):
     status = get_status(get_soup_from_cache())
     await ctx.send(status)
+
+    if param == '':
+
+    elif:
+
+    else:
+        
     
 
 #Cog managment
