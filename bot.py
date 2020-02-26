@@ -165,14 +165,12 @@ async def status(ctx, *, param='none'):
         await ctx.send(result)
     if param == 'all': 
         await ctx.send(print_dict(status_ext))
-    if param == 'none': 
-        await ctx.send(status)
+    if param == 'none':
         if status_bool == False:
             incident_updates = get_last_incident(soup)
-            updates = ''
             for update in incident_updates:
-                updates += f'```{update}```'
-        await ctx.send(updates)
+                status += f'```{update}```'
+        await ctx.send(status)
 
 
 #Cog managment
