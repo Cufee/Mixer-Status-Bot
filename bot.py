@@ -133,8 +133,10 @@ async def help(ctx):
 @client.command()
 async def status(ctx, *, param='none'):
     '''Returns current Mixer status'''
-    status = get_status(get_soup_from_cache())
-    status_ext = get_detailed_status(get_soup_from_cache())
+    soup = get_soup_from_cache()
+    status_bool = get_status_bool(soup)
+    status = get_status(soup)
+    status_ext = get_detailed_status(soup)
     result = ''
     if param == 'vod':
         for x in mixer_vod:
@@ -165,6 +167,12 @@ async def status(ctx, *, param='none'):
         await ctx.send(print_dict(status_ext))
     if param == 'none': 
         await ctx.send(status)
+        if status_bool == False:
+            incident_updates = get_last_incident(soup)
+            updates = ''
+            for update in incident_updates:
+                updates += f'```{update}```'
+        await ctx.send(updates)
 
 
 #Cog managment
