@@ -1,5 +1,4 @@
-# Mixer Status-Bot
- Mixer Status Discord Bot
+# Mixer Status Bot
 
 In works now!
 
