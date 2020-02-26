@@ -8,8 +8,8 @@ In works now!
 ---
 Comamnds:
 
- - status - Displays current status from status.mixer.com
- - help - Help command
+ - -status - Displays current status from status.mixer.com
+ - -help - Help command
 
 To-Do:
 - Per server settings
