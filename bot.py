@@ -18,6 +18,7 @@ def update_soup_cache():
         cache.write(str(soup))
     print('Cache saved')
 
+
 def get_soup_from_cache():
     with open(f"{os.path.dirname(os.path.realpath(__file__))}/status_cache.html", "r", encoding='utf-8') as cache:
         soup = bs.BeautifulSoup(cache, 'lxml')
@@ -25,30 +26,46 @@ def get_soup_from_cache():
 
 
 def get_status(soup):
-    status = soup.find('span', class_='status')
-    status = status.text.strip()
-    return(status)
+    try:
+        status = soup.find('span', class_='status')
+        status = status.text.strip()
+        return(status)
+    except:
+        incident = soup.find('div', class_='unresolved-incidents')
+        status = incident.find(
+            'div', class_='incident-title font-large').text.strip()
+        return(status)
+
 
 def get_status_bool(soup):
-    status = soup.find('span', class_='status').text.strip()
-    if 'All Systems Operational' in status:
-        status_bool = True
-    else:
+    try:
+        status = soup.find('span', class_='status').text.strip()
+        if 'All Systems Operational' in status:
+            status_bool = True
+        else:
+            status_bool = False
+    except:
         status_bool = False
     return(status_bool)
 
+
 def get_detailed_status(soup):
-    status_detailed  = {}
+    status_detailed = {}
     statuses = soup.find_all('div', class_='component-inner-container')
     for item in statuses:
         name = item.find('span', class_='name').text.strip()
         status = item.find('span', class_='component-status').text.strip()
-        status_detailed.update({name : status})
+        status_detailed.update({name: status})
     return(status_detailed)
 
+
 def get_last_incident(soup):
-    #Coming soon
-    return('Coming soon...')
+    incident = soup.find('div', class_='unresolved-incidents')
+    incident_updates_all = incident.find_all('div', class_='update')
+    incident_updates = []
+    for entry in incident_updates_all:
+        incident_updates.append(entry.text.strip())
+    return(incident_updates)
 
 def print_dict(dct):
     result = ''
