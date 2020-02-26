@@ -1,0 +1,7 @@
+{
+    "TOKEN": "your token",
+    "prefix": "-",
+    "mode": "master",
+    "invite": "your invite link",
+    "default_game": "default game the bot will be playing"
+}
