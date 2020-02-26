@@ -29,12 +29,11 @@ def get_status(soup):
     try:
         status = soup.find('span', class_='status')
         status = status.text.strip()
-        return(status)
     except:
         incident = soup.find('div', class_='unresolved-incidents')
         status = incident.find(
             'div', class_='incident-title font-large').text.strip()
-        return(status)
+    return(status)
 
 
 def get_status_bool(soup):
@@ -60,11 +59,14 @@ def get_detailed_status(soup):
 
 
 def get_last_incident(soup):
-    incident = soup.find('div', class_='unresolved-incidents')
-    incident_updates_all = incident.find_all('div', class_='update')
-    incident_updates = []
-    for entry in incident_updates_all:
-        incident_updates.append(entry.text.strip())
+    try:
+        incident = soup.find('div', class_='unresolved-incidents')
+        incident_updates_all = incident.find_all('div', class_='update')
+        incident_updates = []
+        for entry in incident_updates_all:
+            incident_updates.append(entry.text.strip())
+    except:
+        incident_updates = 'Looks like there are no updates yet.'
     return(incident_updates)
 
 def print_dict(dct):
@@ -127,7 +129,7 @@ async def update_bot_status():
 #Root Commands
 @client.command()
 async def help(ctx):
-    help_cmd = f'```Use {prefix}status to check the current status of Mixer.com.\n\nParameters available: all, web, video, vod, xbox, api.```'
+    help_cmd = f'```Use {prefix}status to check the current status of Mixer.com.\n\nParameters available: all, web, video, vod, xbox, api.\n\nStatus updated every 10 minutes.```'
     await ctx.send(help_cmd)
 
 @client.command()
