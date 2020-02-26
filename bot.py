@@ -135,7 +135,6 @@ async def status(ctx, *, param='none'):
     '''Returns current Mixer status'''
     status = get_status(get_soup_from_cache())
     status_ext = get_detailed_status(get_soup_from_cache())
-    await ctx.send(status)
     result = ''
     if param == 'vod':
         for x in mixer_vod:
