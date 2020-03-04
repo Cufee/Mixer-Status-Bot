@@ -22,6 +22,9 @@ client.remove_command('help')
 @client.event
 async def on_ready():
     print(f'{client.user.name} online!')
+    for filename in os.listdir(f'{os.path.dirname(os.path.realpath(__file__))}/cogs'):
+        if filename.endswith('.py'):
+            client.load_extension(f'cogs.{filename[:-3]}')
 
 
 #Tasks
@@ -32,7 +35,7 @@ async def on_ready():
 @client.command(hidden=True)
 @commands.is_owner()
 async def startupdate(ctx):
-    with open(f'{os.path.dirname(os.path.realpath(__file__))}/mixer_status/img/update.jpg', 'rb') as img:
+    with open(f'{os.path.dirname(os.path.realpath(__file__))}/cogs/mixer_status/img/update.jpg', 'rb') as img:
         await client.user.edit(avatar=img.read())
  
 @client.command
@@ -75,10 +78,6 @@ async def listcogs(ctx):
         if filename.endswith('.py'):
             cogs.append(f'{filename[:-3]}')
     await ctx.send(f'Found these cogs:\n{cogs}')
-
-for filename in os.listdir(f'{os.path.dirname(os.path.realpath(__file__))}/cogs'):
-    if filename.endswith('.py'):
-        client.load_extension(f'cogs.{filename[:-3]}')
 
 
 #Run
