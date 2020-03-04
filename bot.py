@@ -35,6 +35,7 @@ async def on_ready():
 @client.command(hidden=True)
 @commands.is_owner()
 async def startupdate(ctx):
+    print('Starting update')
     with open(f'{os.path.dirname(os.path.realpath(__file__))}/cogs/mixer_status/img/update.jpg', 'rb') as img:
         await client.user.edit(avatar=img.read())
     client.close()

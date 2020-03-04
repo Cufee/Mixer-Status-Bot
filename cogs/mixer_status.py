@@ -96,12 +96,12 @@ class mixer_status(commands.Cog):
 
 
     #Tasks
-    @tasks.loop(minutes=10)
+    @tasks.loop(minutes=5)
     async def save_cache(self):
         print('Updating local cache')
         update_soup_cache()
 
-    @tasks.loop(minutes=10)
+    @tasks.loop(minutes=5)
     async def update_bot_status(self):
         status_bool = get_status_bool(get_soup_from_cache())
         status = get_status(get_soup_from_cache())
