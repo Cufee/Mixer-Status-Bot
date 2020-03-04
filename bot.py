@@ -29,7 +29,13 @@ async def on_ready():
 
 
 #Root Commands
-@client.command()
+@client.command(hidden=True)
+@commands.is_owner()
+async def startupdate(ctx):
+    with open(f'{os.path.dirname(os.path.realpath(__file__))}/mixer_status/img/update.jpg', 'rb') as img:
+        await client.user.edit(avatar=img.read())
+ 
+@client.command
 async def help(ctx):
     help_cmd = f'```Use {prefix}status to check the current status of Mixer.com.\n\nParameters available: all, web, video, vod, xbox, api.\n\nStatus updated every 10 minutes.```'
     await ctx.send(help_cmd)

@@ -90,8 +90,8 @@ class mixer_status(commands.Cog):
     #Startup
     def __init__(self, client):
         self.client = client
-        self.client.save_cache.start()
-        self.client.update_bot_status.start()
+        self.save_cache.start()
+        self.update_bot_status.start()
         print('Cog mixer_status was loaded')
 
 
@@ -104,7 +104,9 @@ class mixer_status(commands.Cog):
     @tasks.loop(minutes=10)
     async def update_bot_status(self):
         status_bool = get_status_bool(get_soup_from_cache())
+        print(status_bool)
         status = get_status(get_soup_from_cache())
+        print(status)
         if status_bool == True:
             print('Everything is fine')
             await self.client.change_presence(status=discord.Status.online, activity=discord.Game(status))

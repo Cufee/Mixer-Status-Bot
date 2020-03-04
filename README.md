@@ -12,5 +12,7 @@ Comamnds:
  - -help - Help command
 
 To-Do:
-- Per server settings
-- Move status update script into a cog
+- Per server prefix selection
+- Per server channel selection
+- Add alert system
+- ~~Move status update script into a cog~~
