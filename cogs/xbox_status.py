@@ -111,17 +111,13 @@ class xbox_status(commands.Cog):
 
     #Commands
     @commands.command()
-    async def comehere(self, ctx):
-        print(ctx.channel)
-
-    @commands.command()
     async def xbox(self, ctx, *, param='none'):
         '''Returns current Xbox status'''
         soup = get_soup_from_cache()
         status_bool = get_status_bool(soup)
         status = get_status(soup)
         status_ext = get_detailed_status(soup)
-
+        pass
 
 #Setup
 def setup(client):

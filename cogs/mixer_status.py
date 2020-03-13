@@ -119,50 +119,47 @@ class mixer_status(commands.Cog):
 
     #Commands
     @commands.command()
-    async def comehere(self, ctx):
-        print(ctx.channel)
-
-    @commands.command()
     async def mixer(self, ctx, *, param='none'):
         '''Returns current Mixer status'''
         soup = get_soup_from_cache()
         status_bool = get_status_bool(soup)
         status = get_status(soup)
         status_ext = get_detailed_status(soup)
+        await self.client.delete_message(ctx.message)
         result = ''
         if param == 'vod':
             for x in mixer_vod:
                 result += ("\n{} - {}".format(x, status_ext[x]))
             result = f'```{result}```'
-            await ctx.send(result)
+            await ctx.send(result, delete_after=30)
         if param == 'video':
             for x in mixer_video:
                 result += ("\n{} - {}".format(x, status_ext[x]))
             result = f'```{result}```'
-            await ctx.send(result)
+            await ctx.send(result, delete_after=30)
         if param == 'xbox':
             for x in mixer_xbox:
                 result += ("\n{} - {}".format(x, status_ext[x]))
             result = f'```{result}```'
-            await ctx.send(result)
+            await ctx.send(result, delete_after=30)
         if param == 'web':
             for x in mixer_web:
                 result += ("\n{} - {}".format(x, status_ext[x]))
             result = f'```{result}```'
-            await ctx.send(result)
+            await ctx.send(result, delete_after=30)
         if param == 'api':
             for x in mixer_apis:
                 result += ("\n{} - {}".format(x, status_ext[x]))
             result = f'```{result}```'
-            await ctx.send(result)
+            await ctx.send(result, delete_after=30)
         if param == 'all': 
-            await ctx.send(print_dict(status_ext))
+            await ctx.send(print_dict(status_ext), delete_after=30)
         if param == 'none':
             if status_bool == False:
                 incident_updates = get_last_incident(soup)
                 for update in incident_updates:
                     status += f'```{update}```'
-            await ctx.send(status)
+            await ctx.send(result, delete_after=30)
 
 
 #Setup
