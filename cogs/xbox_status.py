@@ -12,12 +12,12 @@ import os
 
 #Parsing functions
 def update_soup_cache():
-    status_page_url = 'https://status.mixer.com/'
+    status_page_url = 'https://beta.support.xbox.com/xbox-live-status?xr=shellnav'
     sauce = urllib.request.urlopen(status_page_url).read()
     soup = bs.BeautifulSoup(sauce, 'lxml')
     with open(f"{os.path.dirname(os.path.realpath(__file__))}/xbox_status/status_cache.html", "w", encoding='utf-8') as cache:
         cache.write(str(soup))
-    print('Cache saved')
+    print('[XBOX]Cache saved')
 
 
 def get_soup_from_cache():
@@ -82,42 +82,14 @@ class xbox_status(commands.Cog):
     #Startup
     def __init__(self, client):
         self.client = client
-        self.save_cache.start()
-        self.update_bot_status.start()
         print('Cog xbox_status was loaded')
 
 
     #Tasks
-    @tasks.loop(minutes=5)
-    async def save_cache(self):
-        print('Updating local cache')
-        update_soup_cache()
-
-    @tasks.loop(minutes=5)
-    async def update_bot_status(self):
-        status_bool = get_status_bool(get_soup_from_cache())
-        status = get_status(get_soup_from_cache())
-        if status_bool == True:
-            print('Everything is fine')
-            await self.client.change_presence(status=discord.Status.online, activity=discord.Game(status))
-            with open(f'{os.path.dirname(os.path.realpath(__file__))}/xbox_status/img/green.jpg', 'rb') as img:
-                await self.client.user.edit(avatar=img.read())
-        else:
-            print('Something is on fire')
-            await self.client.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game(status))
-            with open(f'{os.path.dirname(os.path.realpath(__file__))}/xbox_status/img/yellow.jpg', 'rb') as img:
-                await self.client.user.edit(avatar=img.read())
 
 
     #Commands
-    @commands.command()
-    async def xbox(self, ctx, *, param='none'):
-        '''Returns current Xbox status'''
-        soup = get_soup_from_cache()
-        status_bool = get_status_bool(soup)
-        status = get_status(soup)
-        status_ext = get_detailed_status(soup)
-        pass
+
 
 #Setup
 def setup(client):

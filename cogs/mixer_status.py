@@ -17,7 +17,7 @@ def update_soup_cache():
     soup = bs.BeautifulSoup(sauce, 'lxml')
     with open(f"{os.path.dirname(os.path.realpath(__file__))}/mixer_status/status_cache.html", "w", encoding='utf-8') as cache:
         cache.write(str(soup))
-    print('Cache saved')
+    print('[MIXER]Cache saved')
 
 
 def get_soup_from_cache():
@@ -98,7 +98,7 @@ class mixer_status(commands.Cog):
     #Tasks
     @tasks.loop(minutes=5)
     async def save_cache(self):
-        print('Updating local cache')
+        print('[MIXER]Updating local cache')
         update_soup_cache()
 
     @tasks.loop(minutes=5)
@@ -106,12 +106,12 @@ class mixer_status(commands.Cog):
         status_bool = get_status_bool(get_soup_from_cache())
         status = get_status(get_soup_from_cache())
         if status_bool == True:
-            print('Everything is fine')
+            print('[MIXER]Everything is fine')
             await self.client.change_presence(status=discord.Status.online, activity=discord.Game(status))
             with open(f'{os.path.dirname(os.path.realpath(__file__))}/mixer_status/img/green.jpg', 'rb') as img:
                 await self.client.user.edit(avatar=img.read())
         else:
-            print('Something is on fire')
+            print('[MIXER]Something is on fire')
             await self.client.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game(status))
             with open(f'{os.path.dirname(os.path.realpath(__file__))}/mixer_status/img/yellow.jpg', 'rb') as img:
                 await self.client.user.edit(avatar=img.read())
@@ -125,7 +125,7 @@ class mixer_status(commands.Cog):
         status_bool = get_status_bool(soup)
         status = get_status(soup)
         status_ext = get_detailed_status(soup)
-        await self.client.delete_message(ctx.message)
+        await ctx.message.delete()
         result = ''
         if param == 'vod':
             for x in mixer_vod:
@@ -159,7 +159,7 @@ class mixer_status(commands.Cog):
                 incident_updates = get_last_incident(soup)
                 for update in incident_updates:
                     status += f'```{update}```'
-            await ctx.send(result, delete_after=30)
+            await ctx.send(status, delete_after=30)
 
 
 #Setup
