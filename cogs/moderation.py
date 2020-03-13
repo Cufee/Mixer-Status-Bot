@@ -21,12 +21,12 @@ class moderation(commands.Cog):
         await ctx.send(channel, delete_after=30)
 
     @commands.command(pass_context = True)
-    async def clear(self, ctx, number):
-        mgs = [] #Empty list to put all the messages in the log
-        number = int(number) #Converting the amount of messages to delete to an integer
-        async for x in self.client.logs_from(ctx.message.channel, limit = number):
-            mgs.append(x)
-        await self.client.delete_messages(mgs)
+    @commands.is_owner()
+    #Clear messages in channel
+    async def clear(self, ctx, number=1):
+        await ctx.send(f'Deleting {number} messages')
+        await ctx.channel.purge(limit=number)
+        
 
 #Setup
 def setup(client):
