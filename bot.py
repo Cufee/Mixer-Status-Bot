@@ -28,7 +28,7 @@ async def on_ready():
 @client.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
-        await ctx.send('Command not found.')
+        await ctx.send('Command not found.', delete_after=5)
     raise error
 
 
@@ -44,36 +44,40 @@ async def on_command_error(ctx, error):
 @client.command(hidden=True)
 @commands.is_owner()
 async def load(ctx, extension):
+    await ctx.message.delete()
     client.load_extension(f'cogs.{extension}')
-    await ctx.send(f'Loaded {extension} extension.')
+    await ctx.send(f'Loaded {extension} extension.', delete_after=10)
 
 @client.command(hidden=True)
 @commands.is_owner()
 async def unload(ctx, extension='null'):
+    await ctx.message.delete()
     if extension == 'null':
-        await ctx.send(f'No extension name specified.')
+        await ctx.send(f'No extension name specified.', delete_after=10)
     else:
         client.unload_extension(f'cogs.{extension}')
-        await ctx.send(f'Unloaded {extension} extension.')
+        await ctx.send(f'Unloaded {extension} extension.', delete_after=10)
 
 @client.command(hidden=True)
 @commands.is_owner()
 async def reload(ctx, extension='null'):
+    await ctx.message.delete()
     if extension == 'null':
-        await ctx.send(f'No extension name specified.')
+        await ctx.send(f'No extension name specified.', delete_after=10)
     else:
         client.unload_extension(f'cogs.{extension}')
         client.load_extension(f'cogs.{extension}')
-        await ctx.send(f'Reloaded {extension} extension.')
+        await ctx.send(f'Reloaded {extension} extension.', delete_after=10)
 
 @client.command(hidden=True)
 @commands.is_owner()
 async def listcogs(ctx):
+    await ctx.message.delete()
     cogs = []
     for filename in os.listdir(f'{os.path.dirname(os.path.realpath(__file__))}/cogs'):
         if filename.endswith('.py'):
             cogs.append(f'{filename[:-3]}')
-    await ctx.send(f'Found these cogs:\n{cogs}')
+    await ctx.send(f'Found these cogs:\n{cogs}', delete_after=10)
 
 
 #Run
