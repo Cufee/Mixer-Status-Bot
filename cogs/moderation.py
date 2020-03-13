@@ -11,6 +11,8 @@ class moderation(commands.Cog):
         self.client = client
         print('Cog moderation was loaded')
 
+    #Events
+
 
     #Tasks
 
@@ -27,7 +29,11 @@ class moderation(commands.Cog):
     async def clear(self, ctx, number=1):
         await ctx.channel.purge(limit=number)
         await ctx.send(f'Deleting {number} messages', delete_after=10)
-        
+
+    @commands.command()
+    async def round(self, ctx, number:float):
+        number = round(number)
+        await ctx.send(number)
 
 #Setup
 def setup(client):
