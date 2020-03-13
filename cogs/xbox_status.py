@@ -15,13 +15,13 @@ def update_soup_cache():
     status_page_url = 'https://status.mixer.com/'
     sauce = urllib.request.urlopen(status_page_url).read()
     soup = bs.BeautifulSoup(sauce, 'lxml')
-    with open(f"{os.path.dirname(os.path.realpath(__file__))}/mixer_status/status_cache.html", "w", encoding='utf-8') as cache:
+    with open(f"{os.path.dirname(os.path.realpath(__file__))}/xbox_status/status_cache.html", "w", encoding='utf-8') as cache:
         cache.write(str(soup))
     print('Cache saved')
 
 
 def get_soup_from_cache():
-    with open(f"{os.path.dirname(os.path.realpath(__file__))}/mixer_status/status_cache.html", "r", encoding='utf-8') as cache:
+    with open(f"{os.path.dirname(os.path.realpath(__file__))}/xbox_status/status_cache.html", "r", encoding='utf-8') as cache:
         soup = bs.BeautifulSoup(cache, 'lxml')
     return(soup)
 
@@ -78,21 +78,13 @@ def print_dict(dct):
     return(result)
 
 
-#API lists
-mixer_apis = ['Mixer API', 'Interactive API', 'Webhook Delivery']
-mixer_web = ['Mixer Web Experience', 'Website Delivery', 'Chat', 'Skills (Sparks and Embers)', 'Dashboard', 'Interactive API', 'Webhook Delivery']
-mixer_xbox = ['Mixer Xbox App', 'Skills (Sparks and Embers)', 'Chat', 'Xbox/Windows Notification Delivery']
-mixer_video = ['FTL (Low Latency) Video Delivery', 'HLS (Fallback) Video Delivery', 'Video Ingestion', 'Video Distribution']
-mixer_vod = ['VOD', 'VOD Uploads', 'VOD Playback']
-
-
-class mixer_status(commands.Cog):
+class xbox_status(commands.Cog):
     #Startup
     def __init__(self, client):
         self.client = client
         self.save_cache.start()
         self.update_bot_status.start()
-        print('Cog mixer_status was loaded')
+        print('Cog xbox_status was loaded')
 
 
     #Tasks
@@ -108,12 +100,12 @@ class mixer_status(commands.Cog):
         if status_bool == True:
             print('Everything is fine')
             await self.client.change_presence(status=discord.Status.online, activity=discord.Game(status))
-            with open(f'{os.path.dirname(os.path.realpath(__file__))}/mixer_status/img/green.jpg', 'rb') as img:
+            with open(f'{os.path.dirname(os.path.realpath(__file__))}/xbox_status/img/green.jpg', 'rb') as img:
                 await self.client.user.edit(avatar=img.read())
         else:
             print('Something is on fire')
             await self.client.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game(status))
-            with open(f'{os.path.dirname(os.path.realpath(__file__))}/mixer_status/img/yellow.jpg', 'rb') as img:
+            with open(f'{os.path.dirname(os.path.realpath(__file__))}/xbox_status/img/yellow.jpg', 'rb') as img:
                 await self.client.user.edit(avatar=img.read())
 
 
@@ -123,48 +115,14 @@ class mixer_status(commands.Cog):
         print(ctx.channel)
 
     @commands.command()
-    async def mixer(self, ctx, *, param='none'):
-        '''Returns current Mixer status'''
+    async def xbox(self, ctx, *, param='none'):
+        '''Returns current Xbox status'''
         soup = get_soup_from_cache()
         status_bool = get_status_bool(soup)
         status = get_status(soup)
         status_ext = get_detailed_status(soup)
-        result = ''
-        if param == 'vod':
-            for x in mixer_vod:
-                result += ("\n{} - {}".format(x, status_ext[x]))
-            result = f'```{result}```'
-            await ctx.send(result)
-        if param == 'video':
-            for x in mixer_video:
-                result += ("\n{} - {}".format(x, status_ext[x]))
-            result = f'```{result}```'
-            await ctx.send(result)
-        if param == 'xbox':
-            for x in mixer_xbox:
-                result += ("\n{} - {}".format(x, status_ext[x]))
-            result = f'```{result}```'
-            await ctx.send(result)
-        if param == 'web':
-            for x in mixer_web:
-                result += ("\n{} - {}".format(x, status_ext[x]))
-            result = f'```{result}```'
-            await ctx.send(result)
-        if param == 'api':
-            for x in mixer_apis:
-                result += ("\n{} - {}".format(x, status_ext[x]))
-            result = f'```{result}```'
-            await ctx.send(result)
-        if param == 'all': 
-            await ctx.send(print_dict(status_ext))
-        if param == 'none':
-            if status_bool == False:
-                incident_updates = get_last_incident(soup)
-                for update in incident_updates:
-                    status += f'```{update}```'
-            await ctx.send(status)
 
 
 #Setup
 def setup(client):
-    client.add_cog(mixer_status(client))
+    client.add_cog(xbox_status(client))
