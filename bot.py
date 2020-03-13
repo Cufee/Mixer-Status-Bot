@@ -25,6 +25,12 @@ async def on_ready():
         if filename.endswith('.py'):
             client.load_extension(f'cogs.{filename[:-3]}')
 
+@client.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send('Command not found.')
+    raise error
+
 
 #Tasks
 #Root tasks go here

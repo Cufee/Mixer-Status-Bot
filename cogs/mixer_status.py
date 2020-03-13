@@ -96,12 +96,12 @@ class mixer_status(commands.Cog):
 
 
     #Tasks
-    @tasks.loop(minutes=10)
+    @tasks.loop(minutes=5)
     async def save_cache(self):
         print('Updating local cache')
         update_soup_cache()
 
-    @tasks.loop(minutes=10)
+    @tasks.loop(minutes=5)
     async def update_bot_status(self):
         status_bool = get_status_bool(get_soup_from_cache())
         status = get_status(get_soup_from_cache())
@@ -116,6 +116,11 @@ class mixer_status(commands.Cog):
             with open(f'{os.path.dirname(os.path.realpath(__file__))}/mixer_status/img/yellow.jpg', 'rb') as img:
                 await self.client.user.edit(avatar=img.read())
 
+
+    #Commands
+    @commands.command()
+    async def comehere(self, ctx):
+        print(ctx.channel)
 
     @commands.command()
     async def status(self, ctx, *, param='none'):
