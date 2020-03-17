@@ -67,7 +67,7 @@ def get_last_incident(soup):
         for entry in incident_updates_all:
             incident_updates.append(entry.text.strip())
     except:
-        incident_updates = 'Looks like there are no updates yet.'
+        incident_updates = ['Looks like there are no updates yet.']
     return(incident_updates)
 
 def print_dict(dct):
