@@ -92,7 +92,18 @@ class mixer_status(commands.Cog):
         self.client = client
         self.save_cache.start()
         self.update_bot_status.start()
+        self.update_status_channel.start()
         print('Cog mixer_status was loaded')
+
+
+    #Events
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.channel.name == 'check-status':
+            if message.author.id != self.client.user.id and message.content.startswith('-')==False:
+                await message.delete()
+        else:
+            pass
 
 
     #Tasks
@@ -116,6 +127,26 @@ class mixer_status(commands.Cog):
             with open(f'{os.path.dirname(os.path.realpath(__file__))}/mixer_status/img/yellow.jpg', 'rb') as img:
                 await self.client.user.edit(avatar=img.read())
 
+    @tasks.loop(minutes=5)
+    async def update_status_channel(self):
+        print('[MIXER]Updating status channel')
+        status_bool = get_status_bool(get_soup_from_cache())
+        status = get_status(get_soup_from_cache())
+        channel = self.client.get_channel(684800736097337420)
+        async for message in channel.history(limit=1):
+            print(message.content)
+            if status in message.content:
+                print('[MIXER]Status did not change')
+            else:
+                print('[MIXER]Status has changed')
+                await message.delete()
+                if status_bool == False:
+                    soup = get_soup_from_cache()
+                    incident_updates = get_last_incident(soup)
+                    for update in incident_updates:
+                        status += f'```{update}```'
+                await channel.send(f'**Current Status:** {status}')
+
 
     #Commands
     @commands.command()
@@ -131,6 +162,12 @@ class mixer_status(commands.Cog):
 
 
     @commands.command()
+    async def refresh_status(self, ctx):
+        await ctx.message.delete()
+
+
+
+    @commands.command()
     async def mixer(self, ctx, *, param='none'):
         '''Returns current Mixer status'''
         soup = get_soup_from_cache()
@@ -139,6 +176,8 @@ class mixer_status(commands.Cog):
         status_ext = get_detailed_status(soup)
         await ctx.message.delete()
         result = ''
+        if param == 'option':
+            await ctx.send('Use -mixer *option* or -mixer\n*Options available: vod, video, xbox, web, api, all*', delete_after=30)
         if param == 'vod':
             for x in mixer_vod:
                 result += ("\n{} - {}".format(x, status_ext[x]))
@@ -171,7 +210,7 @@ class mixer_status(commands.Cog):
                 incident_updates = get_last_incident(soup)
                 for update in incident_updates:
                     status += f'```{update}```'
-            await ctx.send(status, delete_after=30)
+            await ctx.send(f'{status} \n*Other options: vod, video, xbox, web, api, all*', delete_after=30)
 
 
 #Setup

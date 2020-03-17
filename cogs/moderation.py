@@ -20,13 +20,13 @@ class moderation(commands.Cog):
     @commands.command()
     async def comehere(self, ctx):
         await ctx.message.delete()
-        channel = ctx.channel
+        channel = f'I am in {ctx.channel} with ID {ctx.channel.id}'
         await ctx.send(channel, delete_after=10)
 
-    @commands.command(pass_context = True)
-    @commands.is_owner()
+    @commands.command(pass_context=True)
+    @commands.has_permissions(administrator=True)
     #Clear messages in channel
-    async def clear(self, ctx, number=1):
+    async def clear(self, ctx, number=0):
         await ctx.channel.purge(limit=number)
         await ctx.send(f'Deleting {number} messages', delete_after=10)
 
