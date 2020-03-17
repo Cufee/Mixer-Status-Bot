@@ -1,6 +1,8 @@
 # Mixer Status Bot
+Bot is private until per server settings are available
 
 In works now!
+
 
 ![Bot](https://i.imgur.com/GI6lo5j.png)
 
