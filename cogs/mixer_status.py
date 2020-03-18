@@ -130,22 +130,22 @@ class mixer_status(commands.Cog):
     @tasks.loop(minutes=5)
     async def update_status_channel(self):
         print('[MIXER]Updating status channel')
-        status_bool = get_status_bool(get_soup_from_cache())
-        status = get_status(get_soup_from_cache())
+        soup = get_soup_from_cache()
+        status_bool = get_status_bool(soup)
+        status = get_status(soup)
+        incident_updates = get_last_incident(soup)
+
+        if status_bool == False:
+            for update in incident_updates:
+                status += f'```{update}```'
+
         channel = self.client.get_channel(684800736097337420)
         async for message in channel.history(limit=1):
-            print(message.content)
             if status in message.content:
                 print('[MIXER]Status did not change')
             else:
                 print('[MIXER]Status has changed')
-                await message.delete()
-                if status_bool == False:
-                    soup = get_soup_from_cache()
-                    incident_updates = get_last_incident(soup)
-                    for update in incident_updates:
-                        status += f'```{update}```'
-                await channel.send(f'**Current Status:** {status}')
+                await channel.send(status)
 
 
     #Commands
