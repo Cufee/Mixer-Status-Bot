@@ -162,15 +162,6 @@ class mixer_status(commands.Cog):
 
 
     @commands.command()
-    async def refresh_status(self, ctx):
-        try:
-            self.update_status_channel.cancel()
-            self.update_status_channel.start()
-        except:
-            print('Error running refresh_status')
-            await ctx.send('Error')
-
-    @commands.command()
     async def mixer(self, ctx, *, param='none'):
         '''Returns current Mixer status'''
         soup = get_soup_from_cache()
