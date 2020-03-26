@@ -163,9 +163,12 @@ class mixer_status(commands.Cog):
 
     @commands.command()
     async def refresh_status(self, ctx):
-        await ctx.message.delete()
-
-
+        try:
+            self.update_status_channel.cancel()
+            self.update_status_channel.start()
+        except:
+            print('Error running refresh_status')
+            await ctx.send('Error')
 
     @commands.command()
     async def mixer(self, ctx, *, param='none'):
