@@ -154,11 +154,20 @@ class mixer_status(commands.Cog):
     async def status_test(self, ctx, *, param='ok'):
         await ctx.message.delete()
         if param != 'ok':
-            await self.client.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game(status))
+            await self.client.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game('This is a drill'))
             with open(f'{os.path.dirname(os.path.realpath(__file__))}/mixer_status/img/yellow.jpg', 'rb') as img:
                 await self.client.user.edit(avatar=img.read())
         else:
             await ctx.send(f'input - {param}', delete_after=30)
+
+    @commands.command()
+    @commands.is_owner()
+    async def start_update(self, ctx, *, param='ok'):
+        await ctx.message.delete()
+        await self.client.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game('Planned Maintenance of Status Botto :)'))
+        with open(f'{os.path.dirname(os.path.realpath(__file__))}/mixer_status/img/yellow.jpg', 'rb') as img:
+            await self.client.user.edit(avatar=img.read())
+        await ctx.send('Starting maintenance mode', delete_after=10)
 
 
     @commands.command()
